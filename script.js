@@ -14,11 +14,11 @@ class Quiz {
         this.questions = questions;
     }
 
-    isLast() {
+    isLast = () => {
         return this.questions.length === this.index;
     }
 
-    next(answer) {
+    next = (answer) => {
         if (!this.isLast()) {
             if (this.checkAnswer(answer)) {
                 this.score += (100 / (this.questionsNumber()));
@@ -27,23 +27,23 @@ class Quiz {
         }
     }
 
-    getCurrentQuestion() {
+    getCurrentQuestion = () => {
         return this.questions[this.index];
     }
 
-    number() { // number of current question
+    number = () => { // number of current question
         return this.index + 1;
     }
 
-    questionsNumber() { // number of total questions in quiz
+    questionsNumber = () => { // number of total questions in quiz
         return this.questions.length;
     }
 
-    checkAnswer(index) {
+    checkAnswer = (index) => {
         return this.getCurrentQuestion().answer === this.getCurrentQuestion().choices[index];
     }
 
-    showScore() {
+    showScore = () => {
         return this.score.toFixed(2);
     }
 }
@@ -51,10 +51,10 @@ class Quiz {
 
 const questions = [
     new Question("Can I park here?", ["Sorry, I did that.", "It's the same place.", "Only for half an hour."], "Only for half an hour."),
-    new Question("What colour will you paint the children's bedroom?", ["I hope it was right.","We can't decide.","It wasn't very difficult."], "We can't decide."),
-    new Question("I can't understand this email.", ["Would you like some help?","It's very good.","Don't you know?"], "Would you like some help?"),
-    new Question("I'd like two tickets for tomorrow night.", ["How much did you pay?","Afternoon and evening.","I'll just check for you."], "I'll just check for you."),
-    new Question("Shall we go to the gym now?", ["I'm too tired.","It's very good.","Not at all."], "I'm too tired."),
+    new Question("What colour will you paint the children's bedroom?", ["I hope it was right.", "We can't decide.", "It wasn't very difficult."], "We can't decide."),
+    new Question("I can't understand this email.", ["Would you like some help?", "It's very good.", "Don't you know?"], "Would you like some help?"),
+    new Question("I'd like two tickets for tomorrow night.", ["How much did you pay?", "Afternoon and evening.", "I'll just check for you."], "I'll just check for you."),
+    new Question("Shall we go to the gym now?", ["I'm too tired.", "It's very good.", "Not at all."], "I'm too tired."),
 
 ];
 
@@ -77,14 +77,17 @@ function loadQuestion() {
     const questionText = document.querySelector('.question-text');
     const questionNumber = document.querySelector('.question-number');
 
-    if (!quiz.isLast()) {
-        loadChoices(shuffleArray(quiz.getCurrentQuestion().choices)); //load shuffled choices
-        questionNumber.innerHTML = quiz.number() + "/" + quiz.questionsNumber();
-        questionText.innerHTML = quiz.number() + ". " + quiz.getCurrentQuestion().text;
+    const { isLast, number, questionsNumber, getCurrentQuestion, showScore } = quiz;
+
+    if (!isLast()) {
+        loadChoices(shuffleArray(getCurrentQuestion().choices)); //load shuffled choices
+        questionNumber.innerHTML = number() + "/" + questionsNumber();
+        questionText.innerHTML = number() + ". " + getCurrentQuestion().text;
+
 
     } else {
-        questionText.innerHTML='';
-        document.querySelector('#quizForm').innerHTML = 'Your Score : ' + quiz.showScore();
+        questionText.innerHTML = '';
+        document.querySelector('#quizForm').innerHTML = 'Your Score : ' + showScore();
         questionNumber.innerHTML = 'Results';
         btnNext.disabled = true;
     }
@@ -94,10 +97,10 @@ function loadQuestion() {
 loadProgressBar();
 function loadProgressBar() {
     const progressBar = document.querySelector('.progress-bar');
-    if(!quiz.isLast()){
-    progressBar.style.width = `${quiz.number() / quiz.questionsNumber() * 100}%`;
+    if (!quiz.isLast()) {
+        progressBar.style.width = `${quiz.number() / quiz.questionsNumber() * 100}%`;
 
-    }else{
+    } else {
         document.querySelector('.progress').remove();
     }
 }
